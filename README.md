@@ -55,6 +55,26 @@ REDDIT_CLIENT_ID=your_client_id
 REDDIT_CLIENT_SECRET=your_client_secret
 REDDIT_USER_AGENT='Mental Health Data Extraction Script v1.0'
 ```
+## Running the Complete Pipeline
+
+1. First, collect data:
+```bash
+python T1_RMHDCscript.py --format csv --limit 100
+```
+   ![T1 Output](docs/images/t1_output.png)
+
+2. Then, analyze sentiment:
+```bash
+python T2_NLPtxtProcessing.py --input T1_output/reddit_mental_health_data_*.csv
+```
+   ![T2 Output](docs/images/t2_output.png)
+
+3. Finally, generate geographical analysis:
+```bash
+python T3_Geo_Analysis_Visualization.py --input T2_output/mental_health_sentiment_*.csv
+```
+   ![T3 Output](docs/images/t3_output.png)
+   
 ### Task 1: Social Media Data Extraction & Preprocessing
 **Objective**: Extract and process mental health-related discussions from Reddit.
 
@@ -298,25 +318,6 @@ project_root/\
 - Temporary file cleanup
 - Secure credential handling
 
-## Running the Complete Pipeline
-
-1. First, collect data:
-```bash
-python T1_RMHDCscript.py --format csv --limit 100
-```
-   ![T1 Output](docs/images/t1_output.png)
-
-2. Then, analyze sentiment:
-```bash
-python T2_NLPtxtProcessing.py --input T1_output/reddit_mental_health_data_*.csv
-```
-   ![T2 Output](docs/images/t2_output.png)
-
-3. Finally, generate geographical analysis:
-```bash
-python T3_Geo_Analysis_Visualization.py --input T2_output/mental_health_sentiment_*.csv
-```
-   ![T3 Output](docs/images/t3_output.png)
 
 ## Error Handling
 ### API Requests
