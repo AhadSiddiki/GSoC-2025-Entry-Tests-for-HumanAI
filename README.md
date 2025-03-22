@@ -123,7 +123,7 @@ python T1_RMHDCscript.py --format csv --limit 100 --time week
 #### Output:
 - Saves processed data in `T1_output/reddit_mental_health_data_TIMESTAMP.csv`
 
-![Data Collection Output](docs/images/data_collection_output.png)
+![Data Collection Output](images/T1output.jpg)
 
 ### Task 2: Sentiment & Crisis Risk Classification
 **Objective**: Analyze post content for sentiment and crisis risk levels.
@@ -173,8 +173,8 @@ python T2_NLPtxtProcessing.py --input input_file.csv
 - Statistical visualizations in `T2_output/`
 
 #### Sample Visualizations
-![Sentiment Distribution](docs/images/sentiment_distribution.png)
-![Risk Level Analysis](docs/images/risk_level_analysis.png)
+![Sentiment Distribution](T2_output/sentiment_risk_distribution.png)
+![Risk_Level_Pie_Chart](images/risk_level_pie_chart.png)
 
 ### Task 3: Crisis Geolocation & Mapping
 **Objective**: Create geographical visualizations of crisis-related discussions.
