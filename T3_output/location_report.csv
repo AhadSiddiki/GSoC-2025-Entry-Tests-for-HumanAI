@@ -1,0 +1,32 @@
+location,mentions,latitude,longitude,full_address
+US,4,39.7837304,-100.445882,United States
+VA,3,41.903411,12.4528527,Civitas Vaticana - Città del Vaticano
+Europe,2,51.0,10.0,Europe
+USA,2,39.7837304,-100.445882,United States
+Myanmar,2,17.1750495,95.9999652,မြန်မာ
+Afghanistan,2,33.7680065,66.2385139,افغانستان
+America,2,39.7837304,-100.445882,United States
+PD,2,45.391408,11.805848677115883,"Padova, Veneto, Italia"
+IM,2,54.1936805,-4.5591148,Isle of Man
+UK,2,6.3110548,20.5447525,"Ouaka, Ködörösêse tî Bêafrîka / République centrafricaine"
+Uzbekistan,1,41.32373,63.9528098,Oʻzbekiston
+Colombia,1,4.099917,-72.9088133,Colombia
+Michigan,1,43.6211955,-84.6824346,"Michigan, United States"
+ny,1,43.1561681,-75.8449946,"New York, United States"
+Syria,1,34.8147886,38.42317811509885,"سورية, سوريا"
+West Africa*,1,47.3138746,5.0488196,"West Africa, Rue d'Auxonne, Faubourg Saint-Pierre, Université, Dijon, Côte-d'Or, Bourgogne-Franche-Comté, France métropolitaine, 21000, France"
+United States,1,39.7837304,-100.445882,United States
+Russia,1,64.6863136,97.7453061,Россия
+North Korea,1,40.3736611,127.0870417,조선민주주의인민공화국
+Lebanon,1,40.375713,-76.4626118,"Lebanon County, Pennsylvania, United States"
+New York*,1,40.7127281,-74.0060152,"City of New York, New York, United States"
+Arkansas,1,35.2048883,-92.4479108,"Arkansas, United States"
+AA,1,5.8101532,0.0995242,"Greater Accra Region, Ghana"
+uk,1,6.3110548,20.5447525,"Ouaka, Ködörösêse tî Bêafrîka / République centrafricaine"
+New York,1,40.7127281,-74.0060152,"City of New York, New York, United States"
+the United States,1,36.13373245,-80.27826363584532,"Subway, The, Eure Drive, Reynolda Village, Winston-Salem, Forsyth County, North Carolina, 27109, United States"
+Chicago,1,41.8755616,-87.6244212,"Chicago, Cook County, Illinois, United States"
+Iraq,1,33.0955793,44.1749775,العراق
+Seattle,1,47.6038321,-122.330062,"Seattle, King County, Washington, United States"
+Va,1,41.903411,12.4528527,Civitas Vaticana - Città del Vaticano
+Middle East,1,39.3014159,-76.5888477,"Middle East, Baltimore, Maryland, United States"
