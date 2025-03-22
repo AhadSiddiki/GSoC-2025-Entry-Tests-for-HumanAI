@@ -1,5 +1,7 @@
 # Mental Health Crisis Analysis - GSOC 2025 Test Submission
 
+## Project Title: AI-Powered Behavioral Analysis for Suicide Prevention, Substance Use, and Mental Health Crisis Detection with Longitudinal Geospatial Crisis Trend Analysis
+
 ## Project Overview
 This project implements a comprehensive pipeline for analyzing mental health-related discussions on Reddit, focusing on crisis detection, sentiment analysis, and geographical visualization.
 
