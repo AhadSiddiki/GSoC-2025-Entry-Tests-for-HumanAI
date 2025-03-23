@@ -189,7 +189,16 @@ python T1_RMHDCscript.py --format csv --limit 100 --time week
    - Compound score calculation
    - Sentiment classification thresholds
 
-   ![Sentiment Analysis Process](docs/images/sentiment_analysis.png)
+   ```bash
+    def _classify_sentiment(compound_score):
+        """Classify sentiment based on compound score"""
+        if compound_score >= 0.05:
+            return "Positive"
+        elif compound_score <= -0.05:
+            return "Negative"
+        else:
+            return "Neutral"
+   ```
 
 2. **Risk Classification Categories**
    ```python
@@ -211,7 +220,31 @@ python T1_RMHDCscript.py --format csv --limit 100 --time week
    - Inverse document frequency calculation
    - Feature importance scoring
 
-   ![TF-IDF Analysis](docs/images/tfidf_analysis.png)
+   ```bash
+       def classify_risk(self):
+        """Classify posts by risk level using term matching and TF-IDF"""
+        print("Classifying risk levels...")
+
+        # Simple term matching for high-risk and moderate concern
+        self.data['high_risk_matches'] = self.data['full_text'].apply(
+            lambda x: self._count_term_matches(x.lower(), HIGH_RISK_TERMS))
+
+        self.data['moderate_concern_matches'] = self.data['full_text'].apply(
+            lambda x: self._count_term_matches(x.lower(), MODERATE_CONCERN_TERMS))
+
+        # Apply TF-IDF to get important terms in each post
+        tfidf_matrix = self.tfidf.fit_transform(self.data['full_text'])
+        feature_names = self.tfidf.get_feature_names_out()
+
+        # Get top terms for each document
+        self.data['top_terms'] = self._get_top_terms(tfidf_matrix, feature_names)
+
+        # Classify risk level based on term matches and sentiment
+        self.data['risk_level'] = self.data.apply(self._determine_risk_level, axis=1)
+
+        print("Risk classification completed")
+        return self.data
+   ```
 
 4. **Visualization Outputs**
    - Risk level distribution
@@ -240,7 +273,41 @@ python T2_NLPtxtProcessing.py --input input_file.csv
    - Location validation
    - Coordinate mapping
 
-   ![Location Extraction Process](docs/images/location_extraction.png)
+   ```bash
+       def geocode_locations(self):
+        """Convert extracted locations to geographical coordinates"""
+        print("Geocoding locations...")
+
+        # Process all unique locations
+        unique_locations = set()
+        for locs in self.data['locations'].dropna():
+            if isinstance(locs, str) and locs.strip():
+                unique_locations.update([loc.strip() for loc in locs.split(',')])
+
+        print(f"Found {len(unique_locations)} unique locations to geocode")
+
+        # Geocode each unique location
+        for location in unique_locations:
+            try:
+                # Skip very generic or likely false positive locations
+                if location.lower() in ['here', 'there', 'home', 'house', 'room', 'bathroom']:
+                    continue
+
+                geo_result = geocode(location)
+                if geo_result:
+                    self.location_data[location] = {
+                        'latitude': geo_result.latitude,
+                        'longitude': geo_result.longitude,
+                        'address': geo_result.address
+                    }
+                    print(f"Geocoded: {location}")
+            except Exception as e:
+                print(f"Error geocoding {location}: {str(e)}")
+
+        print(f"Successfully geocoded {len(self.location_data)} locations")
+        return len(self.location_data) > 0
+
+   ```
 
 2. **Geocoding System**
    ```python
@@ -253,7 +320,47 @@ python T2_NLPtxtProcessing.py --input input_file.csv
    - Intensity calculation
    - Interactive markers
 
-   ![Heatmap Generation Process](docs/images/heatmap_process.png)
+  ```bash
+    def create_heatmap(self, output_file="T3_output/crisis_heatmap.html"):
+        """Generate a heatmap visualization of crisis-related posts"""
+        print("Generating heatmap...")
+        
+        # Create output directory if it doesn't exist
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+        # Create base map centered on average coordinates
+        if not self.coordinates:
+            print("No coordinates available for heatmap")
+            return False
+
+        # Calculate center point for the map
+        avg_lat = sum(coord[0] for coord in self.coordinates) / len(self.coordinates)
+        avg_lon = sum(coord[1] for coord in self.coordinates) / len(self.coordinates)
+
+        # Create the map
+        crisis_map = folium.Map(location=[avg_lat, avg_lon], zoom_start=4)
+
+        # Add heatmap layer
+        HeatMap(self.coordinates).add_to(crisis_map)
+
+        # Add markers for top locations
+        for loc, count in self.location_counts.most_common(10):
+            if loc in self.location_data:
+                lat = self.location_data[loc]['latitude']
+                lon = self.location_data[loc]['longitude']
+                popup_text = f"<strong>{loc}</strong><br>Mentions: {count}"
+                folium.Marker(
+                    [lat, lon],
+                    popup=popup_text,
+                    icon=folium.Icon(color='red', icon='info-sign')
+                ).add_to(crisis_map)
+
+        # Save the map
+        crisis_map.save(output_file)
+        print(f"Heatmap saved to {output_file}")
+
+        return True
+   ```
 
 4. **Statistical Analysis**
    - Regional distribution
