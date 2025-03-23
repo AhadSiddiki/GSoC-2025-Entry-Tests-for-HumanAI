@@ -456,14 +456,29 @@ project_root/\
 
 
 ### 2. Sentiment Analysis Results
-![Sentiment Results](docs/images/sentiment_results.png)
+| sentiment | High-Risk | Low Concern | Moderate Concern  |
+|-----------|-----------|-------------|-------------------|
+| Negative  | 91        | 0           | 205               |
+| Neutral   | 0         | 2           | 3                 |
+| Positive  | 21        | 34          | 96                |
+
 - Risk level distribution
 - Sentiment analysis results
 - Cross-tabulation statistics
 - Visualization plots
 
 ### 3. Geographical Distribution
-![Geo Distribution](docs/images/geo_distribution.png)
+
+| location    | mentions | latitude   | longitude   | full_address                            |
+|-------------|----------|------------|-------------|-----------------------------------------|
+| US          | 4        | 39.7837304 | -100.445882 | United States                           |
+| VA          | 3        | 41.903411  | 12.4528527  | Civitas Vaticana - CittÃ  del Vaticano  |
+| Europe      | 2        | 51         | 10          | Europe                                  |
+| USA         | 2        | 39.7837304 | -100.445882 | United States                           |
+| Myanmar     | 2        | 17.1750495 | 95.9999652  | Myanmar                                 |
+| Afghanistan | 2        | 33.7680065 | 66.2385139  | Afghanstan                              |
+
+
 - Interactive heatmap
 - Top locations chart
 - Detailed location reports
