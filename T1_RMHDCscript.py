@@ -11,6 +11,8 @@ from nltk.tokenize import word_tokenize
 import nltk
 from dotenv import load_dotenv
 from prawcore.exceptions import RequestException
+from collections import Counter
+import pandas as pd
 # Load environment variables from .env file
 load_dotenv()
 
@@ -40,6 +42,7 @@ class RedditExtractor:
     def __init__(self, output_format='csv'):
         self.output_format = output_format.lower()
         self.data = []
+        self.subreddit_stats = {}  # Add dictionary to track subreddit stats
 
         # Initialize Reddit API with increased timeout
         self.reddit = praw.Reddit(
@@ -60,14 +63,22 @@ class RedditExtractor:
                 "addiction", "bipolar", "ptsd", "BPD", "schizophrenia"
             ]
 
+        # Initialize statistics for each subreddit
+        for subreddit in subreddits:
+            self.subreddit_stats[subreddit] = {
+                'total_posts_found': 0,
+                'relevant_posts': 0,
+                'total_likes': 0,
+                'total_comments': 0,
+                'keywords_found': Counter()
+            }
+
         # Extract posts for each keyword from each subreddit
         for subreddit_name in subreddits:
             print(f"Searching in r/{subreddit_name}")
 
             try:
                 subreddit = self.reddit.subreddit(subreddit_name)
-
-                # Get posts with retry logic
                 posts = self._get_posts_with_retry(
                     subreddit=subreddit,
                     time_period=time_period,
@@ -75,22 +86,37 @@ class RedditExtractor:
                     max_retries=max_retries
                 )
 
+                # Update total posts found
+                self.subreddit_stats[subreddit_name]['total_posts_found'] = len(posts)
+
                 # Process each post
                 for post in posts:
                     # Check if post content contains any of our keywords
                     if self._is_relevant(post):
                         processed_post = self._process_post(post)
                         self.data.append(processed_post)
+                        
+                        # Update subreddit statistics
+                        self.subreddit_stats[subreddit_name]['relevant_posts'] += 1
+                        self.subreddit_stats[subreddit_name]['total_likes'] += post.score
+                        self.subreddit_stats[subreddit_name]['total_comments'] += post.num_comments
+                        
+                        # Count keywords found
+                        content = (post.title + " " + post.selftext).lower()
+                        for keyword in MENTAL_HEALTH_KEYWORDS:
+                            if keyword.lower() in content:
+                                self.subreddit_stats[subreddit_name]['keywords_found'][keyword] += 1
 
-                # Respect rate limits with increased delay
-                time.sleep(5)  # Increased from 2 to 5 seconds
+                time.sleep(5)  # Rate limiting
 
             except Exception as e:
                 print(f"Error processing subreddit r/{subreddit_name}: {str(e)}")
-                # Wait longer after an error before continuing
                 time.sleep(10)
                 continue
 
+        # Save subreddit statistics
+        self._save_subreddit_stats()
+        
         print(f"Extracted {len(self.data)} posts in total")
         return self.data
 
@@ -316,6 +342,41 @@ class RedditExtractor:
                 print(f"Data saved to {filepath} using latin-1 encoding")
             except Exception as e2:
                 print(f"Error saving JSON with alternative encoding: {str(e2)}")
+
+    def _save_subreddit_stats(self):
+        """Save subreddit statistics to CSV"""
+        stats_file = os.path.join(output_dir, 'subreddit_statistics.csv')
+        
+        # Prepare statistics for CSV
+        stats_data = []
+        for subreddit, stats in self.subreddit_stats.items():
+            row = {
+                'subreddit': subreddit,
+                'total_posts_found': stats['total_posts_found'],
+                'relevant_posts': stats['relevant_posts'],
+                'total_likes': stats['total_likes'],
+                'total_comments': stats['total_comments'],
+                'engagement_rate': (stats['total_likes'] + stats['total_comments']) / stats['total_posts_found'] if stats['total_posts_found'] > 0 else 0,
+                'relevance_rate': (stats['relevant_posts'] / stats['total_posts_found'] * 100) if stats['total_posts_found'] > 0 else 0,
+                'top_keywords': ', '.join([f"{k}({v})" for k, v in stats['keywords_found'].most_common(5)])
+            }
+            stats_data.append(row)
+
+        # Create DataFrame and save to CSV
+        stats_df = pd.DataFrame(stats_data)
+        stats_df.to_csv(stats_file, index=False)
+        print(f"\nSubreddit statistics saved to {stats_file}")
+        
+        # Print summary
+        print("\nSubreddit Statistics Summary:")
+        print("-----------------------------")
+        for row in stats_data:
+            print(f"\nr/{row['subreddit']}:")
+            print(f"  Total Posts: {row['total_posts_found']}")
+            print(f"  Relevant Posts: {row['relevant_posts']}")
+            print(f"  Engagement Rate: {row['engagement_rate']:.2f}")
+            print(f"  Relevance Rate: {row['relevance_rate']:.1f}%")
+            print(f"  Top Keywords: {row['top_keywords']}")
 
 
 def main():
