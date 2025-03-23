@@ -99,9 +99,64 @@ python T3_Geo_Analysis_Visualization.py --input T2_output/mental_health_sentimen
    - Emoji removal
    - Special character handling
    - Stopword removal
-   
-   ![Preprocessing Steps](docs/images/preprocessing_pipeline.png)
+   ```bash
+    def clean_data(self):
+        """Clean and preprocess the collected data"""
+        print("Cleaning and preprocessing data...")
 
+        if not self.data:
+            print("No data to clean.")
+            return self.data
+
+        try:
+            stop_words = set(stopwords.words('english'))
+
+            for post in self.data:
+                # Get the content (combine title and content)
+                content = post.get('title', '') + ' ' + post.get('content', '')
+
+                # Clean the content
+                cleaned_content = self._clean_text(content)
+
+                # Remove stopwords
+                tokens = word_tokenize(cleaned_content)
+                filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+                cleaned_content = ' '.join(filtered_tokens)
+
+                # Update the post with cleaned content
+                post['cleaned_content'] = cleaned_content
+
+            print("Data cleaning completed")
+        except Exception as e:
+            print(f"Error during data cleaning: {str(e)}")
+            # Add empty cleaned_content field if cleaning fails
+            for post in self.data:
+                if 'cleaned_content' not in post:
+                    post['cleaned_content'] = ''
+
+        return self.data
+
+    def _clean_text(self, text):
+        """Clean text by removing emojis, special characters, URLs, etc."""
+        try:
+            # Remove URLs
+            text = re.sub(r'http\S+|www\S+', '', text)
+
+            # Remove emojis
+            text = text.encode('ascii', 'ignore').decode('ascii')
+
+            # Remove special characters and numbers
+            text = re.sub(r'[^\w\s]', '', text)
+            text = re.sub(r'\d+', '', text)
+
+            # Remove extra whitespaces
+            text = re.sub(r'\s+', ' ', text).strip()
+
+            return text
+        except Exception as e:
+            print(f"Error cleaning text: {str(e)}")
+            return text  # Return original text if cleaning fails
+   ```
 4. **Output Structure**
    ```json
    {
@@ -174,7 +229,7 @@ python T2_NLPtxtProcessing.py --input input_file.csv
 
 #### Sample Visualizations
 ![Sentiment Distribution](T2_output/sentiment_risk_distribution.png)
-![Risk_Level_Pie_Chart](images/risk_level_pie_chart.png)
+![Risk_Level_Pie_Chart](T2_output/risk_level_pie_chart.png)
 
 ### Task 3: Crisis Geolocation & Mapping
 **Objective**: Create geographical visualizations of crisis-related discussions.
@@ -215,8 +270,9 @@ python T3_Geo_Analysis_Visualization.py --input analyzed_data.csv
 - Visualization charts (`T3_output/top_crisis_locations.png`)
 
 #### Sample Maps and Charts
-![Crisis Heatmap](docs/images/crisis_heatmap.png)
-![Top Locations Chart](docs/images/top_locations.png)
+
+[[Live HTML Preview of Map]{(https://rawcdn.githack.com/AhadSiddiki/GSoC-2025-Entry-Tests-for-HumanAI/c3e2a286dd2538814ea0b8ea7fb7fd64b60524ca/T3_output/crisis_heatmap.html)}]
+![Top Locations Chart](T3_output/top_crisis_locations.png)
 
 ## Data Flow
 [Reddit API] → T1 (Data Collection)
