@@ -446,7 +446,19 @@ project_root/\
 ## Sample Results
 
 ### 1. Data Collection Statistics
-![Collection Stats](docs/images/collection_stats.png)
+
+| subreddit     | total_posts_found | relevant_posts | total_likes | total_comments | engagement_rate | relevance_rate | top_keywords                                                               |
+|---------------|-------------------|----------------|-------------|----------------|-----------------|----------------|----------------------------------------------------------------------------|
+| depression    | 100               | 56             | 3870        | 1273           | 51.43           | 56             | depression(23), depressed(15), suicide(13), anxiety(8), suicidal(7)        |
+| anxiety       | 100               | 77             | 2947        | 2248           | 51.95           | 77             | anxiety(68), anxious(18), panic attack(15), therapy(7), depression(5)      |
+| mentalhealth  | 100               | 61             | 2625        | 1144           | 37.69           | 61             | mental health(25), depression(11), therapy(11), suicidal(9), depressed(8)  |
+| SuicideWatch  | 100               | 44             | 3493        | 714            | 42.07           | 44             | suicidal(22), suicide(15), depression(8), anxiety(6), depressed(4)         |
+| addiction     | 100               | 51             | 675         | 765            | 14.4            | 51             | addiction(43), anxiety(8), depression(7), depressed(6), anxious(2)         |
+| bipolar       | 100               | 58             | 7262        | 2433           | 96.95           | 58             | bipolar(43), depression(14), anxiety(9), depressed(7), therapy(5)          |
+| ptsd          | 100               | 72             | 1539        | 892            | 24.31           | 72             | ptsd(53), therapy(16), anxiety(11), panic attack(10), suicide(6)           |
+| BPD           | 100               | 31             | 2312        | 1207           | 35.19           | 31             | mental health(6), therapy(6), overwhelmed(5), suicidal(4), addiction(4)    |
+| schizophrenia | 100               | 5              | 250         | 82             | 3.32            | 5              | suicide(2), depressed(1), anxiety(1), suicidal(1)                          |
+
 - Structured CSV/JSON files containing:
   - Post ID
   - Timestamp
