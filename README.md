@@ -378,7 +378,6 @@ python T3_Geo_Analysis_Visualization.py --input analyzed_data.csv
 
 #### Sample Maps and Charts
 
-[[Live HTML Preview of Map]{(https://rawcdn.githack.com/AhadSiddiki/GSoC-2025-Entry-Tests-for-HumanAI/c3e2a286dd2538814ea0b8ea7fb7fd64b60524ca/T3_output/crisis_heatmap.html)}]
 ![Geo Map](images/geomap.png)
 ![Top Locations Chart](T3_output/top_crisis_locations.png)
 
